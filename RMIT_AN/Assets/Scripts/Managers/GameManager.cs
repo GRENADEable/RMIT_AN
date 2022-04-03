@@ -96,6 +96,24 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Unity Callbacks
+
+    #region Events
+    void OnEnable()
+    {
+        DoggoController.OnPlayerDead += OnPlayerDeadEventReceived;
+    }
+
+    void OnDisable()
+    {
+        DoggoController.OnPlayerDead -= OnPlayerDeadEventReceived;
+    }
+
+    void OnDestroy()
+    {
+        DoggoController.OnPlayerDead -= OnPlayerDeadEventReceived;
+    }
+    #endregion
+
     void Start() => fadeBG.Play("Fade_In");
 
     void Update()
@@ -197,5 +215,20 @@ public class GameManager : MonoBehaviour
         runningDogObj.SetActive(true);
         fadeBG.Play("Fade_In");
     }
+
+    IEnumerator RestartDelay()
+    {
+        fadeBG.Play("Fade_Out");
+        yield return new WaitForSeconds(0.5f);
+        Application.LoadLevel(Application.loadedLevel);
+    }
+    #endregion
+
+    #region Events
+    /// <summary>
+    /// Subbed to event from DoggoController Script;
+    /// Restarts the Game;
+    /// </summary>
+    void OnPlayerDeadEventReceived() => StartCoroutine(RestartDelay());
     #endregion
 }

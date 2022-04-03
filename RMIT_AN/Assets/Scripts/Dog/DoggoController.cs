@@ -8,6 +8,16 @@ public class DoggoController : MonoBehaviour
     [SerializeField]
     [Tooltip("Vel Clamp")]
     private float magClamp = default;
+
+    #region Events
+    public delegate void SendEvents();
+    /// <summary>
+    /// Event sent from DoggoController to GameManager;
+    /// Restarts the Scene;
+    /// </summary>
+    public static event SendEvents OnPlayerDead;
+    #endregion
+
     #endregion
 
     #region Private Variables
@@ -44,6 +54,12 @@ public class DoggoController : MonoBehaviour
 
         _rg.AddForce(Vector3.right * horizontal, ForceMode.Impulse);
         _rg.velocity = Vector3.ClampMagnitude(_rg.velocity, magClamp);
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Obstacle"))
+            OnPlayerDead?.Invoke();
     }
     #endregion
 
