@@ -88,6 +88,16 @@ public class GameManager : MonoBehaviour
     private GameObject secondPanel = default;
     #endregion
 
+    #region Audio
+    [SerializeField]
+    [Tooltip("Heartbeat Aud SFX")]
+    private AudioSource stableHeartbeatAud = default;
+
+    [SerializeField]
+    [Tooltip("Heartbeat Flat SFX")]
+    private AudioClip flatHeartbeatSFX = default;
+    #endregion
+
     #endregion
 
     #region Private Variables
@@ -101,20 +111,27 @@ public class GameManager : MonoBehaviour
     void OnEnable()
     {
         DoggoController.OnPlayerDead += OnPlayerDeadEventReceived;
+        DoggoController.OnPlayerFinish += OnPlayerFinishEventReceived;
     }
 
     void OnDisable()
     {
         DoggoController.OnPlayerDead -= OnPlayerDeadEventReceived;
+        DoggoController.OnPlayerFinish -= OnPlayerFinishEventReceived;
     }
 
     void OnDestroy()
     {
         DoggoController.OnPlayerDead -= OnPlayerDeadEventReceived;
+        DoggoController.OnPlayerFinish -= OnPlayerFinishEventReceived;
     }
     #endregion
 
-    void Start() => fadeBG.Play("Fade_In");
+    void Start()
+    {
+        fadeBG.Play("Fade_In");
+        EnableCursor();
+    }
 
     void Update()
     {
@@ -132,6 +149,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void OnClick_StartGame()
     {
+        DisableCursor();
         menuPanel.SetActive(false);
         introTimeline.Play();
     }
@@ -187,11 +205,20 @@ public class GameManager : MonoBehaviour
             _currGameState = GameState.Game;
             _isGameRunning = true;
             StartCoroutine(SwitchLevelDelay());
-            Debug.Log("Test");
         }
     }
 
+    void DisableCursor()
+    {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
 
+    void EnableCursor()
+    {
+        Cursor.visible = transform;
+        Cursor.lockState = CursorLockMode.None;
+    }
     #endregion
 
     #region Coroutines
@@ -200,6 +227,16 @@ public class GameManager : MonoBehaviour
         fadeBG.Play("Fade_Out");
         yield return new WaitForSeconds(0.5f);
         Application.Quit();
+    }
+
+    IEnumerator EndDelay()
+    {
+        yield return new WaitForSeconds(0.8f);
+        stableHeartbeatAud.Stop();
+        stableHeartbeatAud.PlayOneShot(flatHeartbeatSFX);
+        fadeBG.Play("Fade_Out");
+        yield return new WaitForSeconds(5f);
+        Application.LoadLevel(Application.loadedLevel);
     }
 
     IEnumerator SwitchLevelDelay()
@@ -230,5 +267,7 @@ public class GameManager : MonoBehaviour
     /// Restarts the Game;
     /// </summary>
     void OnPlayerDeadEventReceived() => StartCoroutine(RestartDelay());
+
+    void OnPlayerFinishEventReceived() => StartCoroutine(EndDelay());
     #endregion
 }

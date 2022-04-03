@@ -9,6 +9,14 @@ public class DoggoController : MonoBehaviour
     [Tooltip("Vel Clamp")]
     private float magClamp = default;
 
+    [SerializeField]
+    [Tooltip("Vel Clamp")]
+    private float upwardForce = default;
+
+    [SerializeField]
+    [Tooltip("Vel Clamp")]
+    private Animator dogTailController = default;
+
     #region Events
     public delegate void SendEvents();
     /// <summary>
@@ -16,12 +24,19 @@ public class DoggoController : MonoBehaviour
     /// Restarts the Scene;
     /// </summary>
     public static event SendEvents OnPlayerDead;
+
+    /// <summary>
+    /// Event sent from DoggoController to GameManager;
+    /// Ends game;
+    /// </summary>
+    public static event SendEvents OnPlayerFinish;
     #endregion
 
     #endregion
 
     #region Private Variables
     private Rigidbody _rg = default;
+    private bool _isGameEnded = default;
     #endregion
 
     #region Unity Callbacks
@@ -46,13 +61,19 @@ public class DoggoController : MonoBehaviour
     void Start()
     {
         _rg = GetComponentInChildren<Rigidbody>();
+        dogTailController.Play("Weiner_Dog_Tail_Anim_2");
     }
 
     void Update()
     {
-        float horizontal = Input.GetAxis("Horizontal");
+        if (_isGameEnded)
+            _rg.AddForce(Vector3.up * upwardForce, ForceMode.Impulse);
+        else
+        {
+            float horizontal = Input.GetAxis("Horizontal");
+            _rg.AddForce(Vector3.right * horizontal, ForceMode.Impulse);
+        }
 
-        _rg.AddForce(Vector3.right * horizontal, ForceMode.Impulse);
         _rg.velocity = Vector3.ClampMagnitude(_rg.velocity, magClamp);
     }
 
@@ -60,18 +81,16 @@ public class DoggoController : MonoBehaviour
     {
         if (other.CompareTag("Obstacle"))
             OnPlayerDead?.Invoke();
+
+        if (other.CompareTag("Finish"))
+        {
+            OnPlayerFinish?.Invoke();
+            _isGameEnded = true;
+        }
     }
     #endregion
 
-    #region My Functions
-
-    #endregion
-
     #region Coroutines
-
-    #endregion
-
-    #region Events
 
     #endregion
 }
