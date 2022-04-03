@@ -5,12 +5,13 @@ using UnityEngine;
 public class DoggoController : MonoBehaviour
 {
     #region Serialized Variables
-    //[SerializeField]
-    //[Tooltip("")]
+    [SerializeField]
+    [Tooltip("Vel Clamp")]
+    private float magClamp = default;
     #endregion
 
     #region Private Variables
-
+    private Rigidbody _rg = default;
     #endregion
 
     #region Unity Callbacks
@@ -34,12 +35,15 @@ public class DoggoController : MonoBehaviour
 
     void Start()
     {
-
+        _rg = GetComponentInChildren<Rigidbody>();
     }
 
     void Update()
     {
+        float horizontal = Input.GetAxis("Horizontal");
 
+        _rg.AddForce(Vector3.right * horizontal, ForceMode.Impulse);
+        _rg.velocity = Vector3.ClampMagnitude(_rg.velocity, magClamp);
     }
     #endregion
 

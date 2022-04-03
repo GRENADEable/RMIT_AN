@@ -8,12 +8,19 @@ public class GameManager : MonoBehaviour
 {
     #region Serialized Variables
 
+    #region Enums
     [Space, Header("Enums")]
     [Tooltip("Current Game State")]
     [SerializeField] private GameState _currGameState = GameState.Menu;
-    private enum GameState { Menu, Game, End, Exit };
+    private enum GameState { Menu, Intro, Game, End, Exit };
+    #endregion
 
+    #region Player
     [Space, Header("Player")]
+    [SerializeField]
+    [Tooltip("Secondary Doggo GameObject")]
+    private GameObject runningDogObj = default;
+
     [SerializeField]
     [Tooltip("Decrement Speed")]
     private float decrementSpeed = default;
@@ -29,7 +36,28 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     [Tooltip("Energy Slider")]
     private Slider energyBar = default;
+    #endregion
 
+    #region Level Transition
+    [Space, Header("Level Transition")]
+    [SerializeField]
+    [Tooltip("First Camera")]
+    private GameObject firstCam = default;
+
+    [SerializeField]
+    [Tooltip("Second Camera")]
+    private GameObject secondCam = default;
+
+    [SerializeField]
+    [Tooltip("First level GameObject")]
+    private GameObject firstLevel = default;
+
+    [SerializeField]
+    [Tooltip("Second level GameObject")]
+    private GameObject secondLevel = default;
+    #endregion
+
+    #region UI
     [Space, Header("UI")]
     [SerializeField]
     [Tooltip("Menu Buttons")]
@@ -50,10 +78,21 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     [Tooltip("Intro Timeline")]
     private PlayableDirector introTimeline;
+
+    [SerializeField]
+    [Tooltip("First Panel")]
+    private GameObject firstPanel = default;
+
+    [SerializeField]
+    [Tooltip("Second Panel")]
+    private GameObject secondPanel = default;
+    #endregion
+
     #endregion
 
     #region Private Variables
     private float _currTapSpeed = default;
+    [SerializeField] private bool _isGameRunning = default;
     #endregion
 
     #region Unity Callbacks
@@ -61,13 +100,10 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if (_currGameState == GameState.Game)
+        if (_currGameState == GameState.Intro)
             TapCounter();
 
-        _currTapSpeed -= Time.deltaTime * decrementSpeed;
-        _currTapSpeed = Mathf.Clamp(_currTapSpeed, 0, 10);
-
-        energyBar.value = _currTapSpeed;
+        EnergyBar();
     }
     #endregion
 
@@ -90,7 +126,7 @@ public class GameManager : MonoBehaviour
 
     public void OnStartRunning()
     {
-        _currGameState = GameState.Game;
+        _currGameState = GameState.Intro;
         gamePanel.SetActive(true);
     }
 
@@ -116,6 +152,28 @@ public class GameManager : MonoBehaviour
 
         playerRootAnim.SetFloat("Speed", _currTapSpeed);
     }
+
+    /// <summary>
+    /// Sets the clamp of the float value;
+    /// Updates the UI of the Slider;
+    /// </summary>
+    void EnergyBar()
+    {
+        _currTapSpeed -= Time.deltaTime * decrementSpeed;
+        _currTapSpeed = Mathf.Clamp(_currTapSpeed, 0, 10);
+
+        energyBar.value = _currTapSpeed;
+
+        if (_currTapSpeed >= 10 && !_isGameRunning)
+        {
+            _currGameState = GameState.Game;
+            _isGameRunning = true;
+            StartCoroutine(SwitchLevelDelay());
+            Debug.Log("Test");
+        }
+    }
+
+
     #endregion
 
     #region Coroutines
@@ -124,6 +182,20 @@ public class GameManager : MonoBehaviour
         fadeBG.Play("Fade_Out");
         yield return new WaitForSeconds(0.5f);
         Application.Quit();
+    }
+
+    IEnumerator SwitchLevelDelay()
+    {
+        fadeBG.Play("Fade_Out");
+        yield return new WaitForSeconds(0.5f);
+        firstLevel.SetActive(false);
+        firstCam.SetActive(false);
+        firstPanel.SetActive(false);
+        secondLevel.SetActive(true);
+        secondCam.SetActive(true);
+        secondPanel.SetActive(true);
+        runningDogObj.SetActive(true);
+        fadeBG.Play("Fade_In");
     }
     #endregion
 }
