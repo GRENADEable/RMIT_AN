@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Playables;
 
 public class GameManager : MonoBehaviour
 {
@@ -45,10 +46,14 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     [Tooltip("Fade Image Animation Component")]
     private Animator fadeBG = default;
+
+    [SerializeField]
+    [Tooltip("Intro Timeline")]
+    private PlayableDirector introTimeline;
     #endregion
 
     #region Private Variables
-    [SerializeField] private float _currTapSpeed = default;
+    private float _currTapSpeed = default;
     #endregion
 
     #region Unity Callbacks
@@ -74,8 +79,7 @@ public class GameManager : MonoBehaviour
     public void OnClick_StartGame()
     {
         menuPanel.SetActive(false);
-        gamePanel.SetActive(true);
-        _currGameState = GameState.Game;
+        introTimeline.Play();
     }
 
     /// <summary>
@@ -83,6 +87,12 @@ public class GameManager : MonoBehaviour
     /// Exits the game with Delay;
     /// </summary>
     public void OnClick_ExitGame() => StartCoroutine(QuitDelay());
+
+    public void OnStartRunning()
+    {
+        _currGameState = GameState.Game;
+        gamePanel.SetActive(true);
+    }
 
     /// <summary>
     /// Disables all the Button interaction in the scene;
