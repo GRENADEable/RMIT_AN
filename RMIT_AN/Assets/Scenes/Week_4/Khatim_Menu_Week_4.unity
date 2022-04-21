@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 512277288}
   - component: {fileID: 512277290}
   m_Layer: 5
-  m_Name: CPS_Text
+  m_Name: AN_Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -181,11 +181,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Character, Place & Simulation
+  m_text: 'Animated Narratives
 
-    Week 2
+    Week 4
 
-    Trippy Game'
+    Flying Doggo'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
