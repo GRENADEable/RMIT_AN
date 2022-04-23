@@ -908,6 +908,7 @@ MonoBehaviour:
   menuButtons:
   - {fileID: 1363548250}
   - {fileID: 1697266260}
+  sceneNo: 1
 --- !u!1 &1402846862
 GameObject:
   m_ObjectHideFlags: 0

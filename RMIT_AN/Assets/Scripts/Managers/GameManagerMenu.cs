@@ -12,6 +12,10 @@ public class GameManagerMenu : MonoBehaviour
     [SerializeField]
     [Tooltip("Buttons Components")]
     private Button[] menuButtons = default;
+
+    [SerializeField]
+    [Tooltip("Scene Numbner")]
+    private int sceneNo = default;
     #endregion
 
     #region Unity Callbacks
@@ -49,7 +53,7 @@ public class GameManagerMenu : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         fadeBG.Play("Fade_Out");
         yield return new WaitForSeconds(0.5f);
-        Application.LoadLevel(1);
+        Application.LoadLevel(sceneNo);
     }
 
     /// <summary>
