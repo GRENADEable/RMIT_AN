@@ -34,6 +34,10 @@ public class GameManagerWeek7 : MonoBehaviour
     [SerializeField]
     [Tooltip("After how many seconds does the screen fade?")]
     private float fadeDelay = default;
+
+    [SerializeField]
+    [Tooltip("PP Layer Anim Controller")]
+    private Animator pPController = default;
     #endregion
 
     #region Audio
@@ -112,9 +116,12 @@ public class GameManagerWeek7 : MonoBehaviour
     {
         yield return new WaitForSeconds(hornTime);
         hornAud.PlayOneShot(sfxClips[0]);
+        pPController.SetTrigger("IsEnabled");
         yield return new WaitForSeconds(hornTime);
+        pPController.SetTrigger("IsEnabled");
         hornAud.PlayOneShot(sfxClips[1]);
         yield return new WaitForSeconds(hornTime);
+        pPController.SetTrigger("IsEnabledForever");
         hornAud.pitch = hornPitchAud;
         hornAud.PlayOneShot(sfxClips[2]);
         yield return new WaitForSeconds(endTime);
