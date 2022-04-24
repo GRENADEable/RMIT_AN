@@ -15,6 +15,10 @@ public class GameManagerWeek7 : MonoBehaviour
     [SerializeField]
     [Tooltip("Fade Image Animation Component")]
     private Animator fadeBG = default;
+
+    [SerializeField]
+    [Tooltip("Scene Numbner")]
+    private int sceneNo = default;
     #endregion
 
     #region Game
@@ -26,6 +30,10 @@ public class GameManagerWeek7 : MonoBehaviour
     [SerializeField]
     [Tooltip("After how many seconds does the game end?")]
     private float endTime = default;
+
+    [SerializeField]
+    [Tooltip("After how many seconds does the screen fade?")]
+    private float fadeDelay = default;
     #endregion
 
     #region Audio
@@ -110,12 +118,12 @@ public class GameManagerWeek7 : MonoBehaviour
         hornAud.pitch = hornPitchAud;
         hornAud.PlayOneShot(sfxClips[2]);
         yield return new WaitForSeconds(endTime);
-        hornAud.Stop();
         fadeBG.Play("Fade_Out");
+        yield return new WaitForSeconds(fadeDelay);
         hornAud.pitch = 1f;
         hornAud.PlayOneShot(sfxClips[3]);
-        yield return new WaitForSeconds(1.5f);
-        Application.LoadLevel(3);
+        yield return new WaitForSeconds(1.2f);
+        Application.LoadLevel(sceneNo);
     }
     #endregion
 
