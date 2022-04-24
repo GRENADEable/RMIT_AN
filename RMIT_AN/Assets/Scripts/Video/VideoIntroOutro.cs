@@ -17,26 +17,16 @@ public class VideoIntroOutro : MonoBehaviour
 
     #region Private Variables
     private VideoPlayer _vidPlayer = default;
-    private
     #endregion
 
     #region Unity Callbacks
 
     #region Events
-    void OnEnable()
-    {
-        _vidPlayer.loopPointReached += OnLoopPointReachedEventReceived;
-    }
+    void OnEnable() => _vidPlayer.loopPointReached += OnLoopPointReachedEventReceived;
 
-    void OnDisable()
-    {
-        _vidPlayer.loopPointReached -= OnLoopPointReachedEventReceived;
-    }
+    void OnDisable() => _vidPlayer.loopPointReached -= OnLoopPointReachedEventReceived;
 
-    void OnDestroy()
-    {
-        _vidPlayer.loopPointReached -= OnLoopPointReachedEventReceived;
-    }
+    void OnDestroy() => _vidPlayer.loopPointReached -= OnLoopPointReachedEventReceived;
     #endregion
 
     void Awake()
@@ -44,10 +34,6 @@ public class VideoIntroOutro : MonoBehaviour
         _vidPlayer = GetComponent<VideoPlayer>();
         fadeBG.Play("Fade_In");
     }
-    #endregion
-
-    #region My Functions
-
     #endregion
 
     #region Coroutines

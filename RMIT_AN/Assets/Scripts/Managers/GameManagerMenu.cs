@@ -19,7 +19,11 @@ public class GameManagerMenu : MonoBehaviour
     #endregion
 
     #region Unity Callbacks
-    void Start() => fadeBG.Play("Fade_In");
+    void Start()
+    {
+        fadeBG.Play("Fade_In");
+        EnableCursor();
+    }
     #endregion
 
     #region My Functions
@@ -35,11 +39,28 @@ public class GameManagerMenu : MonoBehaviour
     /// </summary>
     public void OnClick_QuitGame() => StartCoroutine(QuitGameDelay());
 
+    /// <summary>
+    /// Disables all the button interaction in the scene;
+    /// </summary>
     public void OnClick_DisableButtons()
     {
         for (int i = 0; i < menuButtons.Length; i++)
             menuButtons[i].interactable = false;
     }
+
+    #region Cursor
+    void DisableCursor()
+    {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    void EnableCursor()
+    {
+        Cursor.visible = transform;
+        Cursor.lockState = CursorLockMode.None;
+    }
+    #endregion
     #endregion
 
     #region Coroutines

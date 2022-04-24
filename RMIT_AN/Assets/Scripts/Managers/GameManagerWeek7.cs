@@ -6,13 +6,6 @@ public class GameManagerWeek7 : MonoBehaviour
 {
     #region Serialized Variables
 
-    #region Enums
-    [Space, Header("Enums")]
-    [Tooltip("Current Game State")]
-    [SerializeField] private GameState _currGameState = GameState.Intro;
-    private enum GameState { Intro, Game, End, Exit };
-    #endregion
-
     #region UI
     [Space, Header("UI")]
     [SerializeField]
@@ -23,10 +16,36 @@ public class GameManagerWeek7 : MonoBehaviour
     [Tooltip("Fade Image Animation Component")]
     private Animator fadeBG = default;
     #endregion
+
+    #region Game
+    [Space, Header("Game Timer")]
+    [SerializeField]
+    [Tooltip("After how many seconds does the ship horn play?")]
+    private float hornTime = default;
+
+    [SerializeField]
+    [Tooltip("After how many seconds does the game end?")]
+    private float endTime = default;
+    #endregion
+
+    #region Audio
+    [Space, Header("Audios")]
+    [SerializeField]
+    [Tooltip("Horn Aud Source")]
+    private AudioSource hornAud = default;
+
+    [SerializeField]
+    [Tooltip("Horn Aud Source")]
+    private float hornPitchAud = default;
+
+    [SerializeField]
+    [Tooltip("Horn SFXs")]
+    private AudioClip[] sfxClips;
+    #endregion
+
     #endregion
 
     #region Private Variables
-    [SerializeField] private bool _isGameRunning = default;
     #endregion
 
     #region Unity Callbacks
@@ -51,33 +70,12 @@ public class GameManagerWeek7 : MonoBehaviour
     void Start()
     {
         StartCoroutine(StartDelay());
+        StartCoroutine(HornDelay());
         DisableCursor();
-    }
-
-    void Update()
-    {
-
     }
     #endregion
 
     #region My Functions
-
-    /// <summary>
-    /// Tied to Exit Button;
-    /// Exits the game with Delay;
-    /// </summary>
-    public void OnClick_ExitGame() => StartCoroutine(QuitDelay());
-
-    /// <summary>
-    /// Disables all the Button interaction in the scene;
-    /// </summary>
-    public void DisableButtons()
-    {
-        for (int i = 0; i < menuButtons.Length; i++)
-            menuButtons[i].interactable = false;
-    }
-
-    #region Cursor
     void DisableCursor()
     {
         Cursor.visible = false;
@@ -91,45 +89,35 @@ public class GameManagerWeek7 : MonoBehaviour
     }
     #endregion
 
-    #endregion
-
     #region Coroutines
+
+    #region UI
     IEnumerator StartDelay()
     {
         fadeBG.Play("Fade_In");
         yield return new WaitForSeconds(0.5f);
-        _currGameState = GameState.Game;
-    }
-
-    IEnumerator QuitDelay()
-    {
-        fadeBG.Play("Fade_Out");
-        yield return new WaitForSeconds(0.5f);
-        Application.Quit();
-    }
-
-    IEnumerator EndDelay()
-    {
-        fadeBG.Play("Fade_Out");
-        yield return new WaitForSeconds(0.5f);
-        Application.LoadLevel(0);
-    }
-
-    IEnumerator RestartDelay()
-    {
-        fadeBG.Play("Fade_Out");
-        yield return new WaitForSeconds(0.5f);
-        Application.LoadLevel(Application.loadedLevel);
     }
     #endregion
 
-    #region Events
-    /// <summary>
-    /// Subbed to event from DoggoController Script;
-    /// Restarts the Game;
-    /// </summary>
-    void OnPlayerDeadEventReceived() => StartCoroutine(RestartDelay());
+    #region Game
+    IEnumerator HornDelay()
+    {
+        yield return new WaitForSeconds(hornTime);
+        hornAud.PlayOneShot(sfxClips[0]);
+        yield return new WaitForSeconds(hornTime);
+        hornAud.PlayOneShot(sfxClips[1]);
+        yield return new WaitForSeconds(hornTime);
+        hornAud.pitch = hornPitchAud;
+        hornAud.PlayOneShot(sfxClips[2]);
+        yield return new WaitForSeconds(endTime);
+        hornAud.Stop();
+        fadeBG.Play("Fade_Out");
+        hornAud.pitch = 1f;
+        hornAud.PlayOneShot(sfxClips[3]);
+        yield return new WaitForSeconds(1.5f);
+        Application.LoadLevel(3);
+    }
+    #endregion
 
-    void OnPlayerFinishEventReceived() => StartCoroutine(EndDelay());
     #endregion
 }
