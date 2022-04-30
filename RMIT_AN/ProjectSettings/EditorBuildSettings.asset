@@ -6,12 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Week_7/Khatim_Menu_Week_7.unity
-    guid: 189227fa713aa8545b1b9ff0ae1f7b6e
-  - enabled: 1
-    path: Assets/Scenes/Week_7/Khatim_Test_Week_7.unity
-    guid: b609707c79c92de4ca1b65080d1a64e6
-  - enabled: 1
-    path: Assets/Scenes/Week_7/Khatim_Outro_Week_7.unity
-    guid: 2ec86a57007402548ac78c26704695e1
+    path: Assets/Scenes/Week_8/Khatim_Test_Week_8_Intro.unity
+    guid: a938b9ba182df244f98d258e14833218
   m_configObjects: {}
