@@ -1,12 +1,22 @@
 fileFormatVersion: 2
-guid: 2d45cfb3c6bd5b642b9b78a3ac7e11f2
+guid: d79181271184f8b48806e1d881c08c6f
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable:
   - first:
       74: -203655887218126122
-    second: Xbot_Hip_Hop_6_Anim
-  externalObjects: {}
+    second: Xbot_Hip_Hop_3_Anim
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Beta_Joints_MAT
+    second: {fileID: 2100000, guid: 8201feb2294f4574495ee9ea4f414a66, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: asdf1_Beta_HighLimbsGeoSG2
+    second: {fileID: 2100000, guid: 7e4ddd3909e8aad479e7eec4c701739e, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -35,11 +45,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Xbot_Hip_Hop_6_Anim
+      name: Xbot_Hip_Hop_3_Anim
       takeName: mixamo.com
       internalID: 0
       firstFrame: 0
-      lastFrame: 359
+      lastFrame: 101
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
