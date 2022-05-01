@@ -201,7 +201,7 @@ GameObject:
   - component: {fileID: 603499314}
   - component: {fileID: 603499312}
   m_Layer: 0
-  m_Name: Outro_Vid
+  m_Name: Intro_Vid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -215,7 +215,7 @@ VideoPlayer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 603499311}
   m_Enabled: 1
-  m_VideoClip: {fileID: 32900000, guid: 9f48ec84d07e2ac4880950b1ae7d31ee, type: 3}
+  m_VideoClip: {fileID: 32900000, guid: 3e6a81e5d37de2b4ebf0b61c127822aa, type: 3}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
   m_TargetCamera: {fileID: 2030814155}
@@ -269,7 +269,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fadeBG: {fileID: 1600417568}
-  sceneNo: 1
+  sceneNo: 2
 --- !u!1 &933542068
 GameObject:
   m_ObjectHideFlags: 0
