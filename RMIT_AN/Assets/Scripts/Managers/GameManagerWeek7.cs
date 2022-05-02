@@ -8,9 +8,6 @@ public class GameManagerWeek7 : MonoBehaviour
 
     #region UI
     [Space, Header("UI")]
-    [SerializeField]
-    [Tooltip("Menu Buttons")]
-    private Button[] menuButtons = default;
 
     [SerializeField]
     [Tooltip("Fade Image Animation Component")]

@@ -21,40 +21,6 @@ public class GameManagerWeek8 : MonoBehaviour
     private int sceneNo = default;
     #endregion
 
-    #region Game
-    [Space, Header("Game Timer")]
-    [SerializeField]
-    [Tooltip("After how many seconds does the ship horn play?")]
-    private float hornTime = default;
-
-    [SerializeField]
-    [Tooltip("After how many seconds does the game end?")]
-    private float endTime = default;
-
-    [SerializeField]
-    [Tooltip("After how many seconds does the screen fade?")]
-    private float fadeDelay = default;
-
-    [SerializeField]
-    [Tooltip("PP Layer Anim Controller")]
-    private Animator pPController = default;
-    #endregion
-
-    #region Audio
-    [Space, Header("Audios")]
-    [SerializeField]
-    [Tooltip("Horn Aud Source")]
-    private AudioSource hornAud = default;
-
-    [SerializeField]
-    [Tooltip("Horn Aud Source")]
-    private float hornPitchAud = default;
-
-    [SerializeField]
-    [Tooltip("Horn SFXs")]
-    private AudioClip[] sfxClips;
-    #endregion
-
     #endregion
 
     #region Private Variables
@@ -82,7 +48,6 @@ public class GameManagerWeek8 : MonoBehaviour
     void Start()
     {
         StartCoroutine(StartDelay());
-        StartCoroutine(HornDelay());
         DisableCursor();
     }
     #endregion
@@ -108,29 +73,6 @@ public class GameManagerWeek8 : MonoBehaviour
     {
         fadeBG.Play("Fade_In");
         yield return new WaitForSeconds(0.5f);
-    }
-    #endregion
-
-    #region Game
-    IEnumerator HornDelay()
-    {
-        yield return new WaitForSeconds(hornTime);
-        hornAud.PlayOneShot(sfxClips[0]);
-        pPController.SetTrigger("IsEnabled");
-        yield return new WaitForSeconds(hornTime);
-        pPController.SetTrigger("IsEnabled");
-        hornAud.PlayOneShot(sfxClips[1]);
-        yield return new WaitForSeconds(hornTime);
-        pPController.SetTrigger("IsEnabledForever");
-        hornAud.pitch = hornPitchAud;
-        hornAud.PlayOneShot(sfxClips[2]);
-        yield return new WaitForSeconds(endTime);
-        fadeBG.Play("Fade_Out");
-        yield return new WaitForSeconds(fadeDelay);
-        hornAud.pitch = 1f;
-        hornAud.PlayOneShot(sfxClips[3]);
-        yield return new WaitForSeconds(1.2f);
-        Application.LoadLevel(sceneNo);
     }
     #endregion
 
