@@ -25,10 +25,22 @@ public class GameManagerWeek8 : MonoBehaviour
     private Animator fadeBG = default;
     #endregion
 
+    #region Game
+    [Space, Header("Game")]
+    [SerializeField]
+    [Tooltip("Beds")]
+    private GameObject[] beds = default;
+
+    [SerializeField]
+    [Tooltip("Game End after how many Bed Checks?")]
+    private int gameEndBedCheck = 4;
+    #endregion
+
     #endregion
 
     #region Private Variables
-
+    private const string _interactLayer = "Door_Layer";
+    private int _currBedsChecked = default;
     #endregion
 
     #region Unity Callbacks
@@ -36,17 +48,17 @@ public class GameManagerWeek8 : MonoBehaviour
     #region Events
     void OnEnable()
     {
-
+        BedInteraction.OnBedInteract += OnBedInteractEventReceived;
     }
 
     void OnDisable()
     {
-
+        BedInteraction.OnBedInteract -= OnBedInteractEventReceived;
     }
 
     void OnDestroy()
     {
-
+        BedInteraction.OnBedInteract -= OnBedInteractEventReceived;
     }
     #endregion
 
@@ -54,6 +66,7 @@ public class GameManagerWeek8 : MonoBehaviour
     {
         StartCoroutine(StartDelay());
         DisableCursor();
+        ChooseBed();
     }
 
     void Update()
@@ -139,6 +152,14 @@ public class GameManagerWeek8 : MonoBehaviour
 
     #endregion
 
+    void ChooseBed()
+    {
+        int index = Random.Range(0, beds.Length);
+        beds[index].layer = LayerMask.NameToLayer(_interactLayer);
+        beds[index].GetComponentInChildren<Light>().enabled = true;
+        Debug.Log(index);
+    }
+
     #endregion
 
     #region Coroutines
@@ -191,5 +212,23 @@ public class GameManagerWeek8 : MonoBehaviour
     }
     #endregion
 
+    #endregion
+
+    #region Events
+    /// <summary>
+    /// Subbed to event from BedInteraction Script
+    /// Chooses the next bed to light up;
+    /// </summary>
+    void OnBedInteractEventReceived()
+    {
+        ChooseBed();
+        _currBedsChecked++;
+
+        if (_currBedsChecked >= gameEndBedCheck)
+        {
+            OnClick_Menu();
+            Debug.Log("Game Ended");
+        }
+    }
     #endregion
 }

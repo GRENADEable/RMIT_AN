@@ -57,6 +57,9 @@ public class DoorInteraction : MonoBehaviour
             {
                 if (_hit.collider.GetComponentInParent<DoorTrigger>() != null)
                     _hit.collider.GetComponentInParent<DoorTrigger>().InteractDoor();
+
+                if (_hit.collider.GetComponent<BedInteraction>() != null)
+                    _hit.collider.GetComponentInParent<BedInteraction>().InteractBed();
             }
         }
     }
