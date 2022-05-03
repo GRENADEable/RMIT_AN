@@ -3,6 +3,7 @@ using UnityEngine;
     public class PlayerZoom : MonoBehaviour
     {
         #region Serialized Variables
+
         #region Player Zoom
         [Space, Header("Player Zoom")]
         [SerializeField]
