@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -34,6 +35,10 @@ public class GameManagerWeek8 : MonoBehaviour
     [SerializeField]
     [Tooltip("Game End after how many Bed Checks?")]
     private int gameEndBedCheck = 4;
+
+    [SerializeField]
+    [Tooltip("Audio Clips for Bed Party")]
+    private AudioClip[] bedPartySFX = default;
     #endregion
 
     #endregion
@@ -41,6 +46,9 @@ public class GameManagerWeek8 : MonoBehaviour
     #region Private Variables
     private const string _interactLayer = "Door_Layer";
     private int _currBedsChecked = default;
+    private List<AudioSource> bedPartyAud = new List<AudioSource>();
+    private List<Light> bedLight = new List<Light>();
+    [SerializeField] private int _currBedAud = default;
     #endregion
 
     #region Unity Callbacks
@@ -66,7 +74,7 @@ public class GameManagerWeek8 : MonoBehaviour
     {
         StartCoroutine(StartDelay());
         DisableCursor();
-        ChooseBed();
+        IntialiseBed();
     }
 
     void Update()
@@ -152,12 +160,42 @@ public class GameManagerWeek8 : MonoBehaviour
 
     #endregion
 
+    /// <summary>
+    /// Intialises the Bed Audio and Light Components on Start;
+    /// Sets the First bed to show the bed light;
+    /// </summary>
+    void IntialiseBed()
+    {
+        for (int i = 0; i < beds.Length; i++)
+        {
+            bedLight.Add(beds[i].GetComponentInChildren<Light>());
+            bedPartyAud.Add(beds[i].GetComponent<AudioSource>());
+        }
+
+        beds[0].layer = LayerMask.NameToLayer(_interactLayer);
+        bedLight[0].enabled = true;
+
+        bedPartyAud[0].clip = bedPartySFX[2];
+        bedPartyAud[0].Play();
+        _currBedAud = 0;
+
+        //ChooseBed();
+    }
+
     void ChooseBed()
     {
-        int index = Random.Range(0, beds.Length);
-        beds[index].layer = LayerMask.NameToLayer(_interactLayer);
-        beds[index].GetComponentInChildren<Light>().enabled = true;
-        Debug.Log(index);
+        bedPartyAud[_currBedAud].Stop();
+        int bedIndex = Random.Range(0, beds.Length);
+        int sfxIndex = Random.Range(0, bedPartySFX.Length);
+
+        beds[bedIndex].layer = LayerMask.NameToLayer(_interactLayer);
+        bedLight[bedIndex].enabled = true;
+
+        bedPartyAud[bedIndex].clip = bedPartySFX[sfxIndex];
+        bedPartyAud[bedIndex].Play();
+        _currBedAud = bedIndex;
+
+        Debug.Log(bedIndex);
     }
 
     #endregion
@@ -221,8 +259,10 @@ public class GameManagerWeek8 : MonoBehaviour
     /// </summary>
     void OnBedInteractEventReceived()
     {
-        ChooseBed();
         _currBedsChecked++;
+
+        if (_currBedsChecked < gameEndBedCheck)
+            ChooseBed();
 
         if (_currBedsChecked >= gameEndBedCheck)
         {
