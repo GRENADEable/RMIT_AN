@@ -8,6 +8,12 @@ public class GameManagerWeek8 : MonoBehaviour
 {
     #region Serialized Variables
 
+    #region Enums
+    [Space, Header("Enums")]
+    [SerializeField] private GameState _currGameState = GameState.Intro;
+    private enum GameState { Intro, Game, Paused, Outro };
+    #endregion
+
     #region UI
     [Space, Header("UI")]
     [SerializeField]
@@ -87,14 +93,14 @@ public class GameManagerWeek8 : MonoBehaviour
     {
         StartCoroutine(StartDelay());
         DisableCursor();
-        //IntialiseBed();
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (_currGameState == GameState.Game)
         {
-            TogglePause(true);
+            if (Input.GetKeyDown(KeyCode.Escape))
+                TogglePause(true);
         }
     }
     #endregion
@@ -119,6 +125,7 @@ public class GameManagerWeek8 : MonoBehaviour
     {
         if (isPaused)
         {
+            _currGameState = GameState.Paused;
             EnableCursor();
             Time.timeScale = 0;
             hudPanel.SetActive(false);
@@ -126,7 +133,7 @@ public class GameManagerWeek8 : MonoBehaviour
         }
         else
         {
-
+            _currGameState = GameState.Game;
             DisableCursor();
             Time.timeScale = 1;
             hudPanel.SetActive(true);
@@ -291,6 +298,7 @@ public class GameManagerWeek8 : MonoBehaviour
         timelineIntro.gameObject.SetActive(false);
         playerCinematicCam.SetActive(false);
         IntialiseBed();
+        _currGameState = GameState.Game;
     }
     #endregion
 }
