@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Playables;
 
 public class GameManagerWeek8 : MonoBehaviour
 {
@@ -33,12 +34,24 @@ public class GameManagerWeek8 : MonoBehaviour
     private GameObject[] beds = default;
 
     [SerializeField]
+    [Tooltip("Player")]
+    private GameObject playerRoot = default;
+
+    [SerializeField]
+    [Tooltip("Player Cinematic Camera")]
+    private GameObject playerCinematicCam = default;
+
+    [SerializeField]
     [Tooltip("Game End after how many Bed Checks?")]
     private int gameEndBedCheck = 4;
 
     [SerializeField]
     [Tooltip("Audio Clips for Bed Party")]
     private AudioClip[] bedPartySFX = default;
+
+    [SerializeField]
+    [Tooltip("Timeline Intro")]
+    private PlayableDirector timelineIntro = default;
     #endregion
 
     #endregion
@@ -48,7 +61,7 @@ public class GameManagerWeek8 : MonoBehaviour
     private int _currBedsChecked = default;
     private List<AudioSource> bedPartyAud = new List<AudioSource>();
     private List<Light> bedLight = new List<Light>();
-    [SerializeField] private int _currBedAud = default;
+    private int _currBedAud = default;
     #endregion
 
     #region Unity Callbacks
@@ -74,7 +87,7 @@ public class GameManagerWeek8 : MonoBehaviour
     {
         StartCoroutine(StartDelay());
         DisableCursor();
-        IntialiseBed();
+        //IntialiseBed();
     }
 
     void Update()
@@ -211,6 +224,7 @@ public class GameManagerWeek8 : MonoBehaviour
     {
         fadeBG.Play("Fade_In");
         yield return new WaitForSeconds(0.5f);
+        timelineIntro.Play();
     }
 
     /// <summary>
@@ -269,6 +283,14 @@ public class GameManagerWeek8 : MonoBehaviour
             OnClick_Menu();
             Debug.Log("Game Ended");
         }
+    }
+
+    public void OnIntroEnd()
+    {
+        playerRoot.SetActive(true);
+        timelineIntro.gameObject.SetActive(false);
+        playerCinematicCam.SetActive(false);
+        IntialiseBed();
     }
     #endregion
 }
