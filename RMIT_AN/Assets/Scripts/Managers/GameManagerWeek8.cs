@@ -76,16 +76,22 @@ public class GameManagerWeek8 : MonoBehaviour
     void OnEnable()
     {
         BedInteraction.OnBedInteract += OnBedInteractEventReceived;
+
+        FPSControllerBasic.OnPlayerDead += OnPlayerDeadEventReceived;
     }
 
     void OnDisable()
     {
         BedInteraction.OnBedInteract -= OnBedInteractEventReceived;
+
+        FPSControllerBasic.OnPlayerDead -= OnPlayerDeadEventReceived;
     }
 
     void OnDestroy()
     {
         BedInteraction.OnBedInteract -= OnBedInteractEventReceived;
+
+        FPSControllerBasic.OnPlayerDead -= OnPlayerDeadEventReceived;
     }
     #endregion
 
@@ -292,6 +298,16 @@ public class GameManagerWeek8 : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Subbed to event from FPSControllerBasic Script
+    /// Restarts the Game with delay;
+    /// </summary>
+    void OnPlayerDeadEventReceived() => StartCoroutine(RestartGameDelay());
+
+    /// <summary>
+    /// Subbed to event on Timeline;
+    /// When intro ends, the Player gets control to move around;
+    /// </summary>
     public void OnIntroEnd()
     {
         playerRoot.SetActive(true);

@@ -8,6 +8,7 @@ public class FPSControllerBasic : MonoBehaviour
     [Tooltip("Which key to press when running")]
     private KeyCode runKey = KeyCode.LeftShift;
 
+    #region Player Variables
     [Space, Header("Player Variables")]
     [SerializeField]
     [Tooltip("Walk speed of the player")]
@@ -20,7 +21,9 @@ public class FPSControllerBasic : MonoBehaviour
     [SerializeField]
     [Tooltip("Gravity of the player when falling")]
     private float gravity = -9.81f;
+    #endregion
 
+    #region Ground Check
     [Space, Header("Ground Check")]
     [SerializeField]
     [Tooltip("Transform Component for checking the ground")]
@@ -33,6 +36,17 @@ public class FPSControllerBasic : MonoBehaviour
     [SerializeField]
     [Tooltip("Which layer(s) is used for the ground?")]
     private LayerMask groundMask = default;
+    #endregion
+
+    #region Events
+    public delegate void SendEvents();
+    /// <summary>
+    /// Event sent from FPSControllerBasic to GameManager;
+    /// Restarts the map with delay;
+    /// </summary>
+    public static event SendEvents OnPlayerDead;
+    #endregion
+
     #endregion
 
     #region Private Variables
@@ -55,6 +69,12 @@ public class FPSControllerBasic : MonoBehaviour
         GroundCheck();
         PlayerCurrStance();
         PlayerMovement();
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Death_Box"))
+            OnPlayerDead?.Invoke();
     }
     #endregion
 
@@ -91,16 +111,10 @@ public class FPSControllerBasic : MonoBehaviour
     void PlayerCurrStance()
     {
         if (Input.GetKeyDown(runKey))
-        {
             _currSpeed = playerRunSpeed;
-            //Debug.Log("Running");
-        }
 
         if (Input.GetKeyUp(runKey))
-        {
             _currSpeed = playerWalkSpeed;
-            //Debug.Log("Walking");
-        }
     }
     #endregion
 }
